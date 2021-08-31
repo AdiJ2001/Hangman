@@ -1,0 +1,120 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jul 29 18:50:28 2021
+
+@author: Aditya
+"""
+import random
+import string
+import sys
+
+class hangman:
+    
+    def __init__(self):
+        self.del_let= []
+        self.correct_ans = ' '
+        self.lettercheck = ' '
+        self.correct_letg = []
+        self.bodypart_count = -1
+        
+    def movie_gen(self):
+        L=['CINDERELLA','MULAN','TANGLED','BRAVE','TWILIGHT','FROZEN','INCEPTION','INTERSTELLAR','PSYCHO'
+           'HANCOCK','SUPERMAN','IRONMAN','TITANIC','CARS','THOR','RATATOUILLE']
+        self.correct_ans=random.choice(L)
+        self.correct_ans=self.correct_ans.upper()
+        return self.correct_ans
+        
+    def clue_gen(self):
+        b=random.choice(self.correct_ans)
+        for i in self.correct_ans:
+            if i == b:
+                self.correct_letg.append(i)
+                print(i,end=" ")
+            else:
+                self.correct_letg.append('_')
+                print('_',end=" ")
+        self.rem_letter()
+    
+    def letter_check(self,lettercheck):
+        self.lettercheck = lettercheck.upper()
+        if self.lettercheck not in self.correct_ans:
+            self.body_del()
+        elif self.lettercheck in self.correct_ans:
+            if self.lettercheck in self.correct_letg:
+                print("Already guessed this letter correctly")
+                self.rem_letter()
+            else:
+                self.correct_letter()
+    
+    def correct_letter(self):
+        print("\nThe letter is correct.")
+        flag=0
+        for i in range (len(self.correct_ans)):
+            if hang.correct_ans[i]==self.lettercheck:
+                self.correct_letg[i]=self.correct_ans[i]
+        for i in self.correct_letg:
+            print(i,end=" ")
+        for i in self.correct_letg:
+            if i!='_':
+                flag=flag+1
+        print("\n")
+        if flag==len(self.correct_letg):
+            print("You got the movie correctly")
+            self.play_loop()
+        else: 
+            self.rem_letter()
+            
+    def body_del(self):
+        if self.lettercheck not in self.del_let:
+            B=['Face','Body','Arm1','Arm2','Leg1','Leg2','Eyes','Ears','Mouth','Nose']
+            self.bodypart_count+=1
+            print("\nIncorrect Letter.")
+            if self.bodypart_count<(len(B))-1:
+                for i in self.correct_letg:
+                    print(i,end=" ")
+                print("\n"+B[self.bodypart_count],"has been drawn.")
+                self.del_let.append(self.lettercheck)
+                self.rem_letter()
+                print("\n")
+            elif self.bodypart_count==len(B)-1:
+                print("You lost the game.")
+                self.play_loop()   
+        else:
+            print("Already entered this wrong letter.Try a different one")
+            for i in self.correct_letg:
+                print(i,end=" ")
+            self.rem_letter()
+                
+    def rem_letter(self):
+        print("\n")
+        for i in string.ascii_uppercase:
+            if i in self.correct_letg :    
+                print ("_",end=" ")
+            elif i in self.del_let:
+                print ("_",end=" ")
+            else:
+                print(i,end=" ")
+                
+            
+    def play_loop(self):
+        play_game = input("Do You want to play again? y = yes, n = no \n")
+        while play_game not in ["y","n","Y","N"]:
+            play_game = input("Do You want to play again? y = yes, n = no \n")
+        if play_game == "y":
+            self.__init__()
+            self.movie_gen()
+            self.clue_gen()
+        elif play_game == "n":
+            print("Thanks For Playing! We expect you back again!")
+            sys.exit()
+     
+    def letter_checkinp(self):
+        while self.correct_ans!=self.correct_letg:
+            x=input("\nEnter the letter you want to check: ")
+            self.letter_check(x)
+
+
+hang=hangman()
+hang.movie_gen()
+hang.clue_gen()
+hang.letter_checkinp()
